@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const userRoute = require('./routes/user');
+const usersRoute = require('./routes/user');
 
 const PORT = process.env.PORT || 2100;
 
@@ -20,7 +20,7 @@ mongoose.connect(process.env.MONGO_URL)
 //allowing use of json files 
 app.use(express.json());
 
-app.use('/api/user', userRoute);
+app.use('/api/users', usersRoute);
 
 
 app.listen(PORT, () => {
