@@ -17,15 +17,14 @@ router.post('/', verifyTokenAndAdmin, async (req, res) => {
 
 });
 
-//User PUT request
-//Allows user to modify data (such as change username)
+//Product PUT request
 router.put('/:id', verifyTokenAndAuth, async (req, res) => {
     try {
         const updatedProduct = await Product.findByIdAndUpdate(req.params.id, {
             //take everything in req.body and set again
             $set: req.body
         }, { new: true });
-        //update user with new data
+        //update product with new data
         res.status(200).json(updatedProduct);
 
     } catch (error) {
@@ -47,18 +46,19 @@ router.delete('/:id', verifyTokenAndAuth, async (req, res) => {
     };
 });
 
-//GET user by id
+//GET product by id
 router.get('/find/:id', async (req, res) => {
     try {
       const product =  await Product.findById(req.params.id);
-        res.status(200).json(others);
+        res.status(200).json(products);
         
     } catch (error) {
         res.status(500).json(error);
     };
 });
 
-//GET all users
+
+//GET all products
 router.get('/', async (req, res) => {
     const queryNew = req.query.new;
     const queryCategory = req.query.category;
@@ -84,12 +84,5 @@ router.get('/', async (req, res) => {
         console.log(error);
     };
 });
-
-module.exports = router;
-
-
-
-
-
 
 module.exports = router;
