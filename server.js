@@ -13,7 +13,7 @@ dotenv.config();
 
 //Creating mongoose database connection
 mongoose.connect(process.env.MONGO_URL)
-    .then(() => console.log('DB connection seuccesful'))
+    .then(() => console.log('DB connection successful'))
     .catch((err) => {
             console.log(err);
 });
@@ -25,5 +25,5 @@ app.use('/api/users', usersRoute);
 
 
 app.listen(PORT, () => {
-    console.log(`app lsiteing on ${PORT}`);
+    console.log(`app listening on ${PORT}`);
 });

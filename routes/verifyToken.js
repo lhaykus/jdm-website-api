@@ -19,7 +19,7 @@ const verifyToken = (req, res, next) => {
     };
 };
 
-
+//Verifying token and user auth to see if user is authorized to modify/delete data
 const verifyTokenAndAuth = (req, res, next) => {
     verifyToken(req,res, () => {
         if(req.user.id === req.params.id || req.user.isAdmin) {
@@ -28,6 +28,17 @@ const verifyTokenAndAuth = (req, res, next) => {
             res.status(403).json('persmission not allowed');
         }
     });
+};
+
+//verify admin persmission to see if user is allowed to add/modify products and orders
+const verifyTokenAndAdmin = (req, res, next) => {
+    verifyToken(req, res, () => {
+        if(req.user.isAdmin) {
+            next();
+        } else {
+            res.status(403).json('permission not allowed')
+        }
+    });
 }
 
-module.exports = { verifyToken, verifyTokenAndAuth };
+module.exports = { verifyToken, verifyTokenAndAuth, verifyTokenAndAdmin };
