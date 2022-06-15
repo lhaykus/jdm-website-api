@@ -20,20 +20,13 @@ router.post('/', verifyTokenAndAdmin, async (req, res) => {
 //User PUT request
 //Allows user to modify data (such as change username)
 router.put('/:id', verifyTokenAndAuth, async (req, res) => {
-    if (req.body.password) {
-        req.body.password = CryptoJS.AES.encrypt(
-            req.body.password,
-            process.env.SECRET_PASS
-        ).toString();
-    }
-
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, {
+        const updatedProduct = await Product.findByIdAndUpdate(req.params.id, {
             //take everything in req.body and set again
             $set: req.body
         }, { new: true });
         //update user with new data
-        res.status(200).json(updatedUser);
+        res.status(200).json(updatedProduct);
 
     } catch (error) {
         //otherwise send error
@@ -46,8 +39,8 @@ router.put('/:id', verifyTokenAndAuth, async (req, res) => {
 //Delete request
 router.delete('/:id', verifyTokenAndAuth, async (req, res) => {
     try {
-        await User.findByIdAndDelete(req.params.id)
-        res.status(200).json('User had been deleted')
+        await Product.findByIdAndDelete(req.params.id)
+        res.status(200).json('Product had been deleted')
         
     } catch (error) {
         res.status(500).json(error);
@@ -55,10 +48,9 @@ router.delete('/:id', verifyTokenAndAuth, async (req, res) => {
 });
 
 //GET user by id
-router.get('/find/:id', verifyTokenAndAdmin, async (req, res) => {
+router.get('/find/:id', async (req, res) => {
     try {
-      const user =  await User.findById(req.params.id);
-      const { password, ...others } = user._doc;
+      const product =  await Product.findById(req.params.id);
         res.status(200).json(others);
         
     } catch (error) {
@@ -67,11 +59,25 @@ router.get('/find/:id', verifyTokenAndAdmin, async (req, res) => {
 });
 
 //GET all users
-router.get('/', verifyTokenAndAdmin, async (req, res) => {
-    const query = req.query.new
+router.get('/', async (req, res) => {
+    const queryNew = req.query.new;
+    const queryCategory = req.query.category;
+
     try {
-      const users = query ? await User.find().sort({ _id: -1}).limit(5) : await User.find();
-        res.status(200).json(users);
+        let products;
+        if(queryNew) {
+            products = await Product.find().sort({createdAt: -1}).limit(5);
+        } else if(queryCategory) {
+            products = await Product.find({categories: {
+                $in : [queryCategory],
+            },
+        });
+        } else {
+            products = await Product.find();
+        }
+
+        res.status(200).json(products)
+     
         
     } catch (error) {
         res.status(500).json(error);

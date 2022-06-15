@@ -23,7 +23,7 @@ const productSchema = new Schema({
         min: 0,
         default: 0
     },
-    category: {
+    catergories: {
         type: Array,
     }
 });
